@@ -11,6 +11,7 @@
     "jquery-ui": "^1.12.1",
     "plain-draggable": "^2.5.12",
     "popper.js": "^1.14.6",
+    "rc-slider": "^10.1.0",
     "react": "^16.6.3",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.6.3",

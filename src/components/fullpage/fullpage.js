@@ -9,10 +9,6 @@ import ReactFullpage from '@fullpage/react-fullpage';
 import './fullpage.css'
 
 
-
-
-
-
 const Fullpage = () => (
   
   <ReactFullpage
@@ -20,8 +16,8 @@ const Fullpage = () => (
       return (
         <ReactFullpage.Wrapper>
           <div className="section">
-          <Menu></Menu>
-          <PageTab></PageTab>
+          {/*<Menu></Menu>*/}
+          {/*<PageTab></PageTab>*/}
           <Toolbar></Toolbar>
           <Sidepanel></Sidepanel>
           </div>

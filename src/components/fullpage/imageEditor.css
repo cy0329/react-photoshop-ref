@@ -10,3 +10,8 @@
 .fp-tableCell{
     height: unset !important;
 }
+
+.canvas-container {
+    display: grid;
+    justify-content: center;
+}

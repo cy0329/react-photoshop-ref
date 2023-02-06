@@ -1,5 +1,5 @@
 #toolbar{
-    width: 500px;
+    width: 300px;
     position: absolute;
     top: 100px;
     left: 50px;
@@ -90,4 +90,3 @@
     left: 0;
     height: 100%;
 }
-

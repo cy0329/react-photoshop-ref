@@ -1,55 +1,75 @@
-import React, {Component, useCallback, useEffect, useState} from 'react';
+import React, {Component, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import './toolbar.css'
 import appear1 from '../../assets/appear1.png'
 import appear2 from '../../assets/appear2.png'
 import $ from '../../../node_modules/jquery/dist/jquery.min.js';
 import Draggable from 'react-draggable';
-import Slider, { Range } from 'rc-slider';
+import Slider, {Range} from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
+import {fabric} from 'fabric';
+import {FabricJSCanvas, useFabricJSEditor} from 'fabricjs-react'
+import {useDispatch, useSelector} from "react-redux";
+import toggleToolbar, {tbOpen, tbClose, changeTBcoord} from "../../modules/openToolbar";
+import ImageFilters from "../imgEditor/ImageFiltersToolbar";
 
 function Toolbar() {
 
-    const [isOpen, setIsOpen] = useState(true)
-    const [coord, setCoord] = useState({x: 0, y: 0})
-    const [transition, setTransition] = useState('none')
-    $('#toolbar').css({
-        'transition': transition
-    })
+  const {toolbarIsOpen, tbCoord, toolbarTransition } = useSelector(state => ({
+    toolbarIsOpen: state.toggleToolbar.toolbarIsOpen,
+    tbCoord: state.toggleToolbar.tbCoord,
+    toolbarTransition: state.toggleToolbar.toolbarTransition,
+  }))
+  // console.log(toolbarIsOpen, tbCoord, contrast, hue, brightness, saturation, toolbarTransition);
 
-    function handleClose() {
-        setTransition('all ease .5s')
-        setIsOpen(false)
-        setCoord({x: -220, y: 0})
-    }
+  const dispatch = useDispatch();
+  const onTBopen = useCallback(() => dispatch(tbOpen()), [dispatch])
+  const onTBclose = useCallback(() => dispatch(tbClose()), [dispatch])
+  const onChangeTBcoord = useCallback(() => dispatch(changeTBcoord()), [dispatch])
+  // const toggleTB = () => dispatch(toggleTB());
 
-    function handleOpen() {
-        setCoord({x: 0, y: 0})
-        setIsOpen((isOpen) => !isOpen)
-    }
+  $('#toolbar').css({
+    'transition': toolbarTransition
+  })
 
-    console.log(isOpen, coord, transition)
 
-    return (
-      <Draggable disabled={!isOpen} position={coord} onStop={(e, data) => {setCoord({x: data.x, y: data.y}); setTransition('none')}}>
-          <div id="toolbar" onTransitionEnd={() => {
-              $('#toolbar').css({'transition': 'none'})
-          }}>
-              <div className="tbtop">
-                  <p>옵션</p>
-                  {isOpen ? <img id="close" src={appear2} alt="" onClick={handleClose}/> :
-                    <img id="open" src={appear1} alt="" onClick={() => handleOpen()}/>}
-              </div>
-              <div className="tbbody">
-                  <div className="datasetname"><p>[VQA] BBOX 데이터셋</p></div>
-                  <div>
-                      <p>contrast</p>
-                      <Slider min={-100} max={100} startPoint={0} defaultValue={0} onChange={(e) => console.log(e)}/>
-                  </div>
-              </div>
+  // ============== fabricjs react =============
+  // const [contrast, setContrast] = useState(0)
+  //
+  // let canvas = new fabric.Canvas('canvas', {
+  //   width: 1600,
+  //   height: 900
+  // });
+  //
+  // fabric.Image.fromURL('sample2.jpg', function(img) {
+  //   img.scale(0.7)
+  //   img.filters.push(new fabric.Image.filters.Brightness({brightness : contrast}))
+  //   console.log('img : ', img)
+  //   canvas.add(img);
+  //   canvas.renderAll()
+  // });
+
+  // ======= 미룸 =======
+
+
+  return (
+    <Draggable disabled={!toolbarIsOpen} position={tbCoord} onStop={onChangeTBcoord}>
+      <div id="toolbar" onTransitionEnd={() => {
+        $('#toolbar').css({'transition': 'none'})
+      }}>
+        <div className="tbtop">
+          <p>옵션</p>
+          <img id="close" src={!toolbarIsOpen ? appear1 : appear2} alt="" onClick={toolbarIsOpen ? onTBclose : onTBopen}/>
+        </div>
+        <div className="tbbody">
+          <div className="datasetname"><p>[VQA] BBOX 데이터셋</p></div>
+          <div>
+            <ImageFilters/>
           </div>
-      </Draggable>
-    )
+        </div>
+      </div>
+    </Draggable>
+  )
 }
 
 export default Toolbar;

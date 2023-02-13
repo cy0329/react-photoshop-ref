@@ -1,14 +1,15 @@
 import React, {useCallback, Children, Component, useState} from 'react';
 import Draggable from 'react-draggable';
-import './sidepanel.css'
 import $ from '../../../node_modules/jquery/dist/jquery.min.js';
+import {useDispatch, useSelector} from "react-redux";
+import {jbOpen, jbClose, changeJBcoord} from "../../modules/toggleToolbar";
+
+import './jobsbar.css'
 import appear2 from "../../assets/appear2.png";
 import appear1 from "../../assets/appear1.png";
-import {useDispatch, useSelector} from "react-redux";
-import {changeJBcoord, jbClose, jbOpen} from "../../modules/toggleToolbar";
 
 
-function Sidepanel() {
+function Jobsbar() {
   const {jobsbarIsOpen, jbCoord, jobsbarTransition} = useSelector(state => ({
     jobsbarIsOpen: state.toggleToolbar.jobsbarIsOpen,
     jbCoord: state.toggleToolbar.jbCoord,
@@ -20,7 +21,7 @@ function Sidepanel() {
   const onJBclose = useCallback(() => dispatch(jbClose()), [dispatch])
   const onChangeJBcoord = useCallback(() => dispatch(changeJBcoord()), [dispatch])
 
-  $('#sidepanel').css({
+  $('#jobsbar').css({
     'transition': jobsbarTransition
   })
 
@@ -34,20 +35,21 @@ function Sidepanel() {
 
   return (
     <Draggable disabled={!jobsbarIsOpen} position={jbCoord} onStop={(e) => handleDragPosition(e)}>
-
-      <div id="sidepanel" onTransitionEnd={() => {
-        $('#sidepanel').css({'transition': 'none'});
+      <div id="jobsbar" onTransitionEnd={() => {
+        $('#jobsbar').css({'transition': 'none'});
       }}>
-        <div className="paneltop">
+        <div className="jbtop">
           <p>작업 현황</p>
           <img id="toggle-toolbar" src={!jobsbarIsOpen ? appear2 : appear1} alt=""
                onClick={jobsbarIsOpen ? onJBclose : onJBopen}/>
         </div>
-        <div className="panelbody">
+        <div className="jbbody">
+          <h2>들어갈 내용</h2>
+          <p>라벨 작업 현황</p>
         </div>
       </div>
     </Draggable>
   );
 }
 
-export default Sidepanel;
+export default Jobsbar;

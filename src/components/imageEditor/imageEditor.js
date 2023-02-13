@@ -1,14 +1,13 @@
 import React, {useEffect, useRef, useCallback} from 'react';
 import Toolbar from '../toolbar/toolbar'
-import Sidepanel from '../sidepanel/sidepanel'
+import Jobsbar from '../jobsbar/jobsbar'
 
 import './imageEditor.css'
 import {useDispatch, useSelector} from "react-redux";
 import {setFilter} from "../../modules/imageFilter";
-// import Nukki from '../imgEditor/Nukki/Nukki'
+import TopMenu from "../topMenu/topMenu";
+// import Nukki from '../imgTools/Nukki/Nukki'
 
-// const maxCanvasWidth = 1600
-// const maxCanvasHeight = 900
 
 const ImageEditor = () => {
   const {contrast, hue, brightness, saturation, maxCanvasWidth, maxCanvasHeight, filter} = useSelector(state => ({
@@ -31,7 +30,7 @@ const ImageEditor = () => {
   // }, 300);
 
   const image = new Image();
-  image.src = 'sample1.jpg'
+  image.src = 'sample4.jpg'
 
 
 
@@ -53,17 +52,17 @@ const ImageEditor = () => {
         // 가로가 세로보다 긴 경우
         if (image.width > maxCanvasWidth) {
           let newHeight = image.height * (maxCanvasWidth / image.width)
-          if (newHeight > maxCanvasHeight - 22) {
-            height = maxCanvasHeight - 22
-            width = image.width * ((maxCanvasHeight - 22) / image.height)
+          if (newHeight > maxCanvasHeight - 31) {
+            height = maxCanvasHeight - 31
+            width = image.width * ((maxCanvasHeight - 31) / image.height)
           } else {
             width = maxCanvasWidth
             height = newHeight
           }
         } else {
-          if (image.height > maxCanvasHeight - 22) {
-            width = image.width * ((maxCanvasHeight - 22) / image.height)
-            height = maxCanvasHeight - 22
+          if (image.height > maxCanvasHeight - 31) {
+            width = image.width * ((maxCanvasHeight - 31) / image.height)
+            height = maxCanvasHeight - 31
           } else {
             width = image.width
             height = image.height
@@ -71,9 +70,9 @@ const ImageEditor = () => {
         }
       } else {
         // 가로가 세로보다 짧은 경우
-        if (image.height > maxCanvasHeight - 22) {
-          height = maxCanvasHeight - 22
-          width = image.width * ((maxCanvasHeight - 22) / image.height)
+        if (image.height > maxCanvasHeight - 31) {
+          height = maxCanvasHeight - 31
+          width = image.width * ((maxCanvasHeight - 31) / image.height)
         }
       }
       imgCtx.canvas.width = width
@@ -135,12 +134,11 @@ const ImageEditor = () => {
 
   return (
     <div className="section">
-      {/*<TopMenu></TopMenu>*/}
-      {/*<PageTab></PageTab>*/}
+      <TopMenu></TopMenu>
       <canvas id="image-layer" ref={canvasRef1} width={maxCanvasWidth} height={maxCanvasHeight}/>
       <canvas id="front-layer" ref={canvasRef2} width={maxCanvasWidth} height={maxCanvasHeight}/>
       <Toolbar></Toolbar>
-      <Sidepanel></Sidepanel>
+      <Jobsbar></Jobsbar>
     </div>
   );
 }

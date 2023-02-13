@@ -1,13 +1,14 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback} from 'react';
+import Draggable from 'react-draggable';
+import $ from '../../../node_modules/jquery/dist/jquery.min.js';
+import {useDispatch, useSelector} from "react-redux";
+import {tbOpen, tbClose, changeTBcoord} from "../../modules/toggleToolbar";
+import ImageFilters from "../imgTools/Filters/ImageFiltersToolbar";
+
 import './toolbar.css'
 import appear1 from '../../assets/appear1.png'
 import appear2 from '../../assets/appear2.png'
-import $ from '../../../node_modules/jquery/dist/jquery.min.js';
-import Draggable from 'react-draggable';
-import 'rc-slider/assets/index.css';
-import {useDispatch, useSelector} from "react-redux";
-import toggleToolbar, {tbOpen, tbClose, changeTBcoord} from "../../modules/toggleToolbar";
-import ImageFilters from "../imgEditor/ImageFiltersToolbar";
+
 
 function Toolbar() {
 
@@ -35,7 +36,6 @@ function Toolbar() {
       onChangeTBcoord()
     }
   }
-
 
   return (
     <Draggable disabled={!toolbarIsOpen} position={tbCoord} onStop={(e) => handleDragPosition(e)} >

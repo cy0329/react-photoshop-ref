@@ -1,8 +1,9 @@
 import React, {useCallback} from 'react'
 import Slider from "rc-slider";
 import {useDispatch, useSelector} from "react-redux";
-import {changeBright, changeCont, changeH, changeSaturate, resetFilter} from "../../modules/imageFilter";
+import {changeBright, changeCont, changeH, changeSaturate, resetFilter} from "../../../modules/imageFilter";
 import './ImageFiltersToolbar.css'
+import 'rc-slider/assets/index.css';
 
 function ImageFiltersToolbar() {
   const {toolbarIsOpen, contrast, hue, brightness, saturation} = useSelector(state => ({

@@ -1,11 +1,11 @@
-#sidepanel {
+#jobsbar {
     width: 300px;
     position: absolute;
     top: 100px;
     right: 50px;
 }
 
-#sidepanel .paneltop {
+#jobsbar .jbtop {
     width: 100%;
     height: 21px;
     background: #4973ae;
@@ -14,7 +14,7 @@
     position: relative;
 }
 
-#sidepanel .paneltop p{
+#jobsbar .jbtop p{
     font-size: 12px;
     font-weight: bold;
     color: white;
@@ -25,7 +25,7 @@
     cursor: default;
 }
 
-#sidepanel .paneltop #toggle-toolbar{
+#jobsbar .jbtop #toggle-toolbar{
     position: absolute;
     top: 50%;
     left: 4%;
@@ -36,11 +36,11 @@
 
 }
 
-#sidepanel .paneltop #toggle-toolbar:hover {
+#jobsbar .jbtop #toggle-toolbar:hover {
     opacity: 1;
 }
 
-#sidepanel .panelbody {
+#jobsbar .jbbody {
     height: 400px;
     background: white;
     border: solid #4973ae 3px;

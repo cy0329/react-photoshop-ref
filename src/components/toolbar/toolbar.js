@@ -16,6 +16,7 @@ function Toolbar() {
     tbCoord: state.toggleToolbar.tbCoord,
     toolbarTransition: state.toggleToolbar.toolbarTransition,
   }))
+  console.log(tbCoord)
 
   const dispatch = useDispatch();
   const onTBopen = useCallback(() => dispatch(tbOpen()), [dispatch])
@@ -27,11 +28,19 @@ function Toolbar() {
     'transition': toolbarTransition
   })
 
+  function handleDragPosition(e) {
+    if (e.x < 0 || e.x > window.innerWidth || e.y < 0 || e.y > window.innerHeight) {
+      onTBclose()
+    } else {
+      onChangeTBcoord()
+    }
+  }
+
 
   return (
-    <Draggable disabled={!toolbarIsOpen} position={tbCoord} onStop={onChangeTBcoord}>
+    <Draggable disabled={!toolbarIsOpen} position={tbCoord} onStop={(e) => handleDragPosition(e)} >
       <div id="toolbar" onTransitionEnd={() => {
-        $('#toolbar').css({'transition': 'none'})
+        $('#toolbar').css({'transition': 'none'});
       }}>
         <div className="tbtop">
           <p>옵션</p>

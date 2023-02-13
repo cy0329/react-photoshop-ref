@@ -24,11 +24,19 @@ function Sidepanel() {
     'transition': jobsbarTransition
   })
 
+  function handleDragPosition(e) {
+    if (e.x < 0 || e.x > window.innerWidth || e.y < 0 || e.y > window.innerHeight) {
+      onJBclose()
+    } else {
+      onChangeJBcoord()
+    }
+  }
+
   return (
-    <Draggable disabled={!jobsbarIsOpen} position={jbCoord} onStop={onChangeJBcoord}>
+    <Draggable disabled={!jobsbarIsOpen} position={jbCoord} onStop={(e) => handleDragPosition(e)}>
 
       <div id="sidepanel" onTransitionEnd={() => {
-        $('#sidepanel').css({'transition': 'none'})
+        $('#sidepanel').css({'transition': 'none'});
       }}>
         <div className="paneltop">
           <p>작업 현황</p>

@@ -4,10 +4,7 @@ import Sidepanel from '../sidepanel/sidepanel'
 
 import './imageEditor.css'
 import {useDispatch, useSelector} from "react-redux";
-import initImageCanvas, {setMaxHeight, setMaxWidth} from "../../modules/initImageCanvas";
-import TopMenu from "../topMenu/topMenu";
 import {setFilter} from "../../modules/imageFilter";
-import {tbOpen} from "../../modules/toggleToolbar";
 // import Nukki from '../imgEditor/Nukki/Nukki'
 
 // const maxCanvasWidth = 1600
@@ -34,7 +31,7 @@ const ImageEditor = () => {
   // }, 300);
 
   const image = new Image();
-  image.src = 'sample3.jpg'
+  image.src = 'sample1.jpg'
 
 
 
@@ -50,25 +47,23 @@ const ImageEditor = () => {
 
     // 이미지 스케일링
     image.onload = () => {
-      console.log('옴?')
       let imageRatio = image.height / image.width
       // console.log('image.width: ', image.width, 'image.height: ', image.height, 'maxCanvasWidth: ', maxCanvasWidth, 'maxCanvasHeight: ', maxCanvasHeight, 'imageRatio: ', imageRatio)
       if (imageRatio < 1) {
         // 가로가 세로보다 긴 경우
         if (image.width > maxCanvasWidth) {
           let newHeight = image.height * (maxCanvasWidth / image.width)
-          if (newHeight > maxCanvasHeight - 21) {
-            height = maxCanvasHeight - 21
-            width = image.width * ((maxCanvasHeight - 21) / image.height)
+          if (newHeight > maxCanvasHeight - 22) {
+            height = maxCanvasHeight - 22
+            width = image.width * ((maxCanvasHeight - 22) / image.height)
           } else {
             width = maxCanvasWidth
             height = newHeight
           }
-
         } else {
-          if (image.height > maxCanvasHeight - 21) {
-            width = image.width * ((maxCanvasHeight - 21) / image.height)
-            height = maxCanvasHeight - 21
+          if (image.height > maxCanvasHeight - 22) {
+            width = image.width * ((maxCanvasHeight - 22) / image.height)
+            height = maxCanvasHeight - 22
           } else {
             width = image.width
             height = image.height
@@ -76,9 +71,9 @@ const ImageEditor = () => {
         }
       } else {
         // 가로가 세로보다 짧은 경우
-        if (image.height > maxCanvasHeight - 21) {
-          height = maxCanvasHeight - 21
-          width = image.width * ((maxCanvasHeight - 21) / image.height)
+        if (image.height > maxCanvasHeight - 22) {
+          height = maxCanvasHeight - 22
+          width = image.width * ((maxCanvasHeight - 22) / image.height)
         }
       }
       imgCtx.canvas.width = width
@@ -132,19 +127,9 @@ const ImageEditor = () => {
     })
   }, [canvasRef2])
 
-
-
   // 필터
   useEffect(() => {
-    const canvas = canvasRef1.current;
-    // console.log(canvas)
-    const context = canvas.getContext('2d');
-    // console.log(context)
-
-    // const rtfImage = context.getImageData(0, 0, maxCanvasWidth, maxCanvasHeight)
     onSetFilter(`contrast(${contrast}%) hue-rotate(${hue}DEG) brightness(${brightness}%) saturate(${saturation}%)`)
-
-    console.log(context.filter)
   }, [contrast, hue, brightness, saturation])
 
 

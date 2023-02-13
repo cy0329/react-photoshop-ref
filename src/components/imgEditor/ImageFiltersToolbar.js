@@ -2,6 +2,7 @@ import React, {useCallback} from 'react'
 import Slider from "rc-slider";
 import {useDispatch, useSelector} from "react-redux";
 import {changeBright, changeCont, changeH, changeSaturate, resetFilter} from "../../modules/imageFilter";
+import './ImageFiltersToolbar.css'
 
 function ImageFiltersToolbar() {
   const {toolbarIsOpen, contrast, hue, brightness, saturation} = useSelector(state => ({
@@ -20,7 +21,7 @@ function ImageFiltersToolbar() {
   const reset = useCallback(() => dispatch(resetFilter()), [dispatch])
 
   return (
-    <>
+    <div id="image-filter">
       <label htmlFor="contrast">대비 {contrast}%</label>
       <Slider id="contrast" min={0} max={200} startPoint={100} defaultValue={100} value={contrast}
               disabled={!toolbarIsOpen}
@@ -38,7 +39,7 @@ function ImageFiltersToolbar() {
               disabled={!toolbarIsOpen}
               onChange={e => changeSaturation(e)}/>
       <button onClick={reset}>resetFilter</button>
-    </>
+    </div>
   )
 }
 

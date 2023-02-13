@@ -1,60 +1,151 @@
-import React, {Component, useEffect, useRef} from 'react';
-import Menu from '../menu/menu'
-import PageTab from '../pagetab/pagetab'
+import React, {Component, useEffect, useRef, useState} from 'react';
 import Toolbar from '../toolbar/toolbar'
 import Sidepanel from '../sidepanel/sidepanel'
 
-import {$, jQuery} from '../../../node_modules/jquery/dist/jquery.min.js';
-import ReactFullpage from '@fullpage/react-fullpage';
 import './imageEditor.css'
 import {useSelector} from "react-redux";
+import initImageCanvas, {setMaxHeight, setMaxWidth} from "../../modules/initImageCanvas";
+import TopMenu from "../topMenu/topMenu";
+// import Nukki from '../imgEditor/Nukki/Nukki'
 
-
-const MAX_CANVAS_WIDTH = 1600;
-const MAX_CANVAS_HEIGHT = 900;
+// const maxCanvasWidth = 1600
+// const maxCanvasHeight = 900
 
 const ImageEditor = () => {
-  const {contrast, hue, brightness, saturation} = useSelector(state => ({
-    contrast: state.filterImage.contrast,
-    hue: state.filterImage.hue,
-    brightness: state.filterImage.brightness,
-    saturation: state.filterImage.saturation,
+  const {contrast, hue, brightness, saturation, maxCanvasWidth, maxCanvasHeight} = useSelector(state => ({
+    contrast: state.imageFilter.contrast,
+    hue: state.imageFilter.hue,
+    brightness: state.imageFilter.brightness,
+    saturation: state.imageFilter.saturation,
+    maxCanvasWidth: state.initImageCanvas.maxCanvasWidth,
+    maxCanvasHeight: state.initImageCanvas.maxCanvasHeight,
   }))
-  console.log(contrast, hue)
 
-  const canvasRef = useRef(null);
+  // console.log(contrast, hue, brightness, saturation)
 
+  const canvasRef1 = useRef(null);
+  const canvasRef2 = useRef(null);
+
+  // setInterval(function () {
+  //   hatchTick();
+  // }, 300);
+
+  const image = new Image();
+  image.src = 'sample2.jpg'
+
+  let width;
+  let height;
+  useEffect(() => {}, [])
+
+  // 초기 이미지 세팅
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
+    const frontCanvas = canvasRef2.current;
+    const frtCtx = frontCanvas.getContext('2d')
+    const lmgCanvas = canvasRef1.current;
+    const imgCtx = lmgCanvas.getContext('2d');
 
-    const image = new Image();
-    image.src = 'sample2.jpg'
+    // 이미지 스케일링
     image.onload = () => {
-      const width = image.width > image.height ? MAX_CANVAS_WIDTH
-        : (image.width * MAX_CANVAS_HEIGHT) / image.height;
+      let imageRatio = image.height / image.width
+      // console.log('image.width: ', image.width, 'image.height: ', image.height, 'maxCanvasWidth: ', maxCanvasWidth, 'maxCanvasHeight: ', maxCanvasHeight, 'imageRatio: ', imageRatio)
+      if (imageRatio < 1) {
+        // 가로가 세로보다 긴 경우
+        if (image.width > maxCanvasWidth) {
+          let newHeight = image.height * (maxCanvasWidth / image.width)
+          if (newHeight > maxCanvasHeight - 21) {
+            height = maxCanvasHeight - 21
+            width = image.width * ((maxCanvasHeight - 21) / image.height)
+          } else {
+            width = maxCanvasWidth
+            height = newHeight
+          }
 
-      const height = image.width > image.height
-        ? (image.height * MAX_CANVAS_WIDTH) / image.width
-        : MAX_CANVAS_HEIGHT;
-      context.drawImage(image, 50, 50, width, height);
+        } else {
+          if (image.height > maxCanvasHeight - 21) {
+            width = image.width * ((maxCanvasHeight - 21) / image.height)
+            height = maxCanvasHeight - 21
+          } else {
+            width = image.width
+            height = image.height
+          }
+        }
+      } else {
+        // 가로가 세로보다 짧은 경우
+        if (image.height > maxCanvasHeight - 21) {
+          height = maxCanvasHeight - 21
+          width = image.width * ((maxCanvasHeight - 21) / image.height)
+        }
+      }
+      imgCtx.canvas.width = width
+      imgCtx.canvas.height = height
+      frtCtx.canvas.width = width
+      frtCtx.canvas.height = height
+      imgCtx.drawImage(image, 0, 0, width, height);
     }
   });
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
 
-    // const rtfImage = context.getImageData(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT)
+  // 마우스 코디네이터
+  useEffect(() => {
+    const frontCanvas = canvasRef2.current;
+    const frtCtx = frontCanvas.getContext('2d')
+    const imageCanvas = canvasRef1.current;
+    const imgCtx = imageCanvas.getContext('2d')
+
+
+    frontCanvas.addEventListener("mousemove", function (e) {
+      let cRect = frontCanvas.getBoundingClientRect();
+      // canvasX, Y = 마우스 x좌표, y좌표
+      let canvasX = Math.round(e.clientX - cRect.left)
+      let canvasY = Math.round(e.clientY - cRect.top)
+      // 매번 마우스 움직일 때마다 초기화
+      frtCtx.clearRect(0, 0, maxCanvasWidth, maxCanvasHeight)
+
+      // 마우스 따라다니는 십자선
+      frtCtx.lineWidth = 2
+      frtCtx.strokeStyle = 'black'
+      frtCtx.beginPath();
+      frtCtx.moveTo(canvasX, 0)
+      frtCtx.lineTo(canvasX, imgCtx.canvas.height)
+      frtCtx.moveTo(0, canvasY)
+      frtCtx.lineTo(imgCtx.canvas.width, canvasY)
+      frtCtx.stroke()
+
+      // 좌표 표시 배경 박스
+      let coordTxt = `x: ${canvasX}, y: ${canvasY}`
+      let textWidth = frtCtx.measureText(coordTxt).width
+      frtCtx.fillStyle = 'white'
+      frtCtx.strokeStyle = 'white'
+      frtCtx.roundRect(canvasX > imgCtx.canvas.width - 130 ? canvasX - 15 - textWidth : canvasX + 15, canvasY > imgCtx.canvas.height - 45 ? canvasY - 45 : canvasY + 15, textWidth + 10, 30, 5)
+      frtCtx.fill()
+
+      // 좌표 글자 표시
+      frtCtx.font = '15px serif'
+      frtCtx.fillStyle = 'black'
+      frtCtx.fillText(coordTxt, canvasX > imgCtx.canvas.width - 130 ? canvasX - textWidth - 10 : canvasX + 20, canvasY > imgCtx.canvas.height - 45 ? canvasY - 25 : canvasY + 35)
+    })
+  }, [canvasRef2])
+
+
+  // 필터
+  useEffect(() => {
+    const canvas = canvasRef1.current;
+    // console.log(canvas)
+    const context = canvas.getContext('2d');
+    // console.log(context)
+
+    // const rtfImage = context.getImageData(0, 0, maxCanvasWidth, maxCanvasHeight)
     context.filter = `contrast(${contrast}%) hue-rotate(${hue}DEG) brightness(${brightness}%) saturate(${saturation}%)`
-    console.log("탐", contrast)
+    console.log(context.filter)
   }, [contrast, hue, brightness, saturation])
+
 
   return (
     <div className="section">
-      {/*<Menu></Menu>*/}
+      {/*<TopMenu></TopMenu>*/}
       {/*<PageTab></PageTab>*/}
-      <canvas ref={canvasRef} width={MAX_CANVAS_WIDTH} height={MAX_CANVAS_HEIGHT}/>
+      <canvas id="image-layer" ref={canvasRef1} width={maxCanvasWidth} height={maxCanvasHeight}/>
+      <canvas id="front-layer" ref={canvasRef2} width={maxCanvasWidth} height={maxCanvasHeight}/>
       <Toolbar></Toolbar>
       <Sidepanel></Sidepanel>
     </div>

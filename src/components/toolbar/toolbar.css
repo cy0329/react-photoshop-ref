@@ -25,7 +25,7 @@
     cursor: default;
 }
 
-#toolbar .tbtop #close{
+#toolbar .tbtop #toggle-toolbar{
     position: absolute;
     top: 50%;
     right: 2%;
@@ -35,21 +35,7 @@
     opacity: .7;
 }
 
-#toolbar .tbtop #close:hover {
-    opacity: 1;
-}
-
-#toolbar .tbtop #open{
-    position: absolute;
-    top: 50%;
-    right: 2%;
-    transform: translate(-50%,-50%);
-    height: 13px;
-    cursor: pointer;
-    opacity: .7;
-}
-
-#toolbar .tbtop #open:hover {
+#toolbar .tbtop #toggle-toolbar:hover {
     opacity: 1;
 }
 

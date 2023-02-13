@@ -6,10 +6,10 @@ import {changeBright, changeCont, changeH, changeSaturate, resetFilter} from "..
 function ImageFiltersToolbar() {
   const {toolbarIsOpen, contrast, hue, brightness, saturation} = useSelector(state => ({
     toolbarIsOpen: state.toggleToolbar.toolbarIsOpen,
-    contrast: state.filterImage.contrast,
-    hue: state.filterImage.hue,
-    brightness: state.filterImage.brightness,
-    saturation: state.filterImage.saturation,
+    contrast: state.imageFilter.contrast,
+    hue: state.imageFilter.hue,
+    brightness: state.imageFilter.brightness,
+    saturation: state.imageFilter.saturation,
   }))
 
   const dispatch = useDispatch();
@@ -26,7 +26,8 @@ function ImageFiltersToolbar() {
               disabled={!toolbarIsOpen}
               onChange={e => changeContrast(e)}/>
       <label htmlFor="hue">색상 {hue}º</label>
-      <Slider id="hue" min={0} max={360} startPoint={0} defaultValue={0} value={hue} disabled={!toolbarIsOpen}
+      <Slider id="hue" min={0} max={360} startPoint={0} defaultValue={0} value={hue}
+              disabled={!toolbarIsOpen}
               onChange={e => changeHue(e)}/>
       <label htmlFor="brightness">밝기 {brightness}%</label>
       <Slider id="brightness" min={0} max={200} startPoint={100} defaultValue={100} value={brightness}

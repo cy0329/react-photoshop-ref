@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
-import filterImage from './imageFilter';
-import toggleToolbar from './openToolbar';
+import toggleToolbar from './toggleToolbar';
+import initImageCanvas from "./initImageCanvas";
+import imageFilter from "./imageFilter";
 
 const rootReducer = combineReducers({
-  filterImage,
-  toggleToolbar
+  imageFilter,
+  toggleToolbar,
+  initImageCanvas
 });
 
 export default rootReducer;

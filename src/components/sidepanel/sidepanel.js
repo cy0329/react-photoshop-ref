@@ -1,40 +1,39 @@
-import React, {Children, Component, useState} from 'react';
+import React, {useCallback, Children, Component, useState} from 'react';
 import Draggable from 'react-draggable';
 import './sidepanel.css'
-import cross from '../../assets/cross.png';
 import $ from '../../../node_modules/jquery/dist/jquery.min.js';
-import {Tabs, Tab, Col, Nav, NavItem,} from '../../../node_modules/react-bootstrap/dist/react-bootstrap'
 import appear2 from "../../assets/appear2.png";
 import appear1 from "../../assets/appear1.png";
+import {useDispatch, useSelector} from "react-redux";
+import {changeJBcoord, jbClose, jbOpen} from "../../modules/toggleToolbar";
 
 
 function Sidepanel() {
-  const [isOpen, setIsOpen] = useState(true)
-  const [coord, setCoord] = useState({x: 0, y: 0})
-  const [transition, setTransition] = useState('')
+  const {jobsbarIsOpen, jbCoord, jobsbarTransition} = useSelector(state => ({
+    jobsbarIsOpen: state.toggleToolbar.jobsbarIsOpen,
+    jbCoord: state.toggleToolbar.jbCoord,
+    jobsbarTransition: state.toggleToolbar.jobsbarTransition,
+  }))
+
+  const dispatch = useDispatch();
+  const onJBopen = useCallback(() => dispatch(jbOpen()), [dispatch])
+  const onJBclose = useCallback(() => dispatch(jbClose()), [dispatch])
+  const onChangeJBcoord = useCallback(() => dispatch(changeJBcoord()), [dispatch])
+
   $('#sidepanel').css({
-    'transition': transition
+    'transition': jobsbarTransition
   })
 
-  function handleClose() {
-    setTransition('all ease .5s')
-    setIsOpen(false)
-    setCoord({x: 320, y: 0})
-  }
-
-  function handleOpen() {
-    setCoord({x: 0, y: 0})
-    setIsOpen((isOpen) => !isOpen)
-  }
-
   return (
-    <Draggable disabled={!isOpen} position={coord} onStop={(e, data) => {setCoord({x: data.x, y: data.y}); setTransition('none')}}>
+    <Draggable disabled={!jobsbarIsOpen} position={jbCoord} onStop={onChangeJBcoord}>
 
-      <div id="sidepanel" onTransitionEnd={() => {$('#sidepanel').css({'transition': 'none'})}}>
+      <div id="sidepanel" onTransitionEnd={() => {
+        $('#sidepanel').css({'transition': 'none'})
+      }}>
         <div className="paneltop">
           <p>작업 현황</p>
-          {isOpen ? <img id="close" src={appear1} alt="" onClick={handleClose}/> :
-            <img id="open" src={appear2} alt="" onClick={() => handleOpen()}/>}
+          <img id="toggle-toolbar" src={!jobsbarIsOpen ? appear2 : appear1} alt=""
+               onClick={jobsbarIsOpen ? onJBclose : onJBopen}/>
         </div>
         <div className="panelbody">
         </div>

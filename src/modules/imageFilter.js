@@ -1,3 +1,10 @@
+const initialState = {
+  contrast: 100,
+  hue: 0,
+  brightness: 100,
+  saturation: 100
+};
+
 const CONTRAST = 'filter/CONTRAST'
 const HUE = 'filter/HUE'
 const BRIGHTNESS = 'filter/BRIGHTNESS'
@@ -24,14 +31,7 @@ export const resetFilter = () => ({
   type: RESET_FILTER
 })
 
-const initialState = {
-  contrast: 100,
-  hue: 0,
-  brightness: 100,
-  saturation: 100
-};
-
-export default function filterImage(state = initialState, action) {
+export default function imageFilter(state = initialState, action) {
   switch (action.type) {
     case CONTRAST:
       return {

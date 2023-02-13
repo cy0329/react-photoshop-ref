@@ -1,27 +1,30 @@
-import React, {Component, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useCallback} from 'react';
 import Toolbar from '../toolbar/toolbar'
 import Sidepanel from '../sidepanel/sidepanel'
 
 import './imageEditor.css'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import initImageCanvas, {setMaxHeight, setMaxWidth} from "../../modules/initImageCanvas";
 import TopMenu from "../topMenu/topMenu";
+import {setFilter} from "../../modules/imageFilter";
+import {tbOpen} from "../../modules/toggleToolbar";
 // import Nukki from '../imgEditor/Nukki/Nukki'
 
 // const maxCanvasWidth = 1600
 // const maxCanvasHeight = 900
 
 const ImageEditor = () => {
-  const {contrast, hue, brightness, saturation, maxCanvasWidth, maxCanvasHeight} = useSelector(state => ({
+  const {contrast, hue, brightness, saturation, maxCanvasWidth, maxCanvasHeight, filter} = useSelector(state => ({
     contrast: state.imageFilter.contrast,
     hue: state.imageFilter.hue,
     brightness: state.imageFilter.brightness,
     saturation: state.imageFilter.saturation,
     maxCanvasWidth: state.initImageCanvas.maxCanvasWidth,
     maxCanvasHeight: state.initImageCanvas.maxCanvasHeight,
+    filter: state.imageFilter.filter
   }))
-
-  // console.log(contrast, hue, brightness, saturation)
+  const dispatch = useDispatch();
+  const onSetFilter = useCallback((e) => dispatch(setFilter(e)), [dispatch])
 
   const canvasRef1 = useRef(null);
   const canvasRef2 = useRef(null);
@@ -31,11 +34,9 @@ const ImageEditor = () => {
   // }, 300);
 
   const image = new Image();
-  image.src = 'sample2.jpg'
+  image.src = 'sample3.jpg'
 
-  let width;
-  let height;
-  useEffect(() => {}, [])
+
 
   // 초기 이미지 세팅
   useEffect(() => {
@@ -44,8 +45,12 @@ const ImageEditor = () => {
     const lmgCanvas = canvasRef1.current;
     const imgCtx = lmgCanvas.getContext('2d');
 
+    let width;
+    let height;
+
     // 이미지 스케일링
     image.onload = () => {
+      console.log('옴?')
       let imageRatio = image.height / image.width
       // console.log('image.width: ', image.width, 'image.height: ', image.height, 'maxCanvasWidth: ', maxCanvasWidth, 'maxCanvasHeight: ', maxCanvasHeight, 'imageRatio: ', imageRatio)
       if (imageRatio < 1) {
@@ -80,6 +85,7 @@ const ImageEditor = () => {
       imgCtx.canvas.height = height
       frtCtx.canvas.width = width
       frtCtx.canvas.height = height
+      imgCtx.filter = filter
       imgCtx.drawImage(image, 0, 0, width, height);
     }
   });
@@ -127,6 +133,7 @@ const ImageEditor = () => {
   }, [canvasRef2])
 
 
+
   // 필터
   useEffect(() => {
     const canvas = canvasRef1.current;
@@ -135,7 +142,8 @@ const ImageEditor = () => {
     // console.log(context)
 
     // const rtfImage = context.getImageData(0, 0, maxCanvasWidth, maxCanvasHeight)
-    context.filter = `contrast(${contrast}%) hue-rotate(${hue}DEG) brightness(${brightness}%) saturate(${saturation}%)`
+    onSetFilter(`contrast(${contrast}%) hue-rotate(${hue}DEG) brightness(${brightness}%) saturate(${saturation}%)`)
+
     console.log(context.filter)
   }, [contrast, hue, brightness, saturation])
 
